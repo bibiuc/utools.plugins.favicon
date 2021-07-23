@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!DOCTYPE html>
+    <link rel="stylesheet" href="flex.css">
+    <style>
+        body {
+            margin: 0;
+        }
+        .full{
+            width: 100vw;
+            height: 100vh;
+        }
+        #sizes{
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            padding-top: 20px;
+            padding-left: 20px;
+            position: relative;
+        }
+        #sizes>div{
+            margin-right: 20px;
+            margin-bottom: 20px;
+            float: left;
+            background-color: #337BFF;
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 3px 3px;
+        }
+        #sizes>.ico{
+            background-color: #19A15F;
+        }
+        #result{
+            position: relative;
+        }
+        #result>a{
+            float: left;
+            width: 22vw;
+        }
+        #result>a>img{
+            width: 20vw;
+        }
+    </style>
+    <script src="index.js"></script>
+</head>
+<body>
+<div class="full" flex="dir:top">
+    <label id="container" flex-box="1" flex="dir:top main:center cross:center">
+        <div>点击上传图片或者拖放文件</div>
+        <dvi style="height: 0.1px;width:0.1px;overflow: hidden;">
+            <input type="file" id="file" style="opacity: 0;height: 1px;">
+        </dvi>
+    </label>
+    <div id="sizes" style="display: none">
+        <div onclick="drawTo(16, 'ico')" class="ico">16x16(ico)</div>
+        <div onclick="drawTo(32, 'ico')" class="ico">32x32(ico)</div>
+        <div onclick="drawTo(64, 'ico')" class="ico">64x64(ico)</div>
+        <div onclick="drawTo(128, 'ico')" class="ico">128x128(ico)</div>
+        <div onclick="drawTo(256, 'ico')" class="ico">256x256(ico)</div>
+        <div onclick="drawTo(512, 'ico')" class="ico">512x512(ico)</div>
+        <div onclick="drawTo(0, 'png')">原始尺寸(png)</div>
+        <div onclick="drawTo(64, 'png')">64x64(png)</div>
+        <div onclick="drawTo(128, 'png')">128x128(png)</div>
+        <div onclick="drawTo(256, 'png')">256x256(png)</div>
+        <div onclick="drawTo(512, 'png')">512x512(png)</div>
+        <div onclick="drawTo(1024, 'png')">1024x1024(png)</div>
+    </div>
+    <div id="result" flex-box="1" style="display: none">
+
+    </div>
+</div>
+</body>
+</html>
