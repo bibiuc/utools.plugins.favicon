@@ -2,7 +2,7 @@
   "pluginName": "favicon",
   "version": "0.0.1",
   "description": "favicon.ico等图标的快速制作和转换",
-  "homepage": "http://www.bibiuc.com/favicon",
+  "homepage": "https://github.com/bibiuc/utools.plugins.favicon",
   "main": "index.html",
   "preload": "preload.js",
   "logo": "logo.png",
