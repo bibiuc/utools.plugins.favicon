@@ -10,6 +10,7 @@ class Api {
         this.canvas.width = this.canvas.height = 1;
         this.ctx = this.canvas.getContext('2d');
         this.img = new Image();
+        this.ratio = 1;
         this.reader = new FileReader();
         this.reader.onload = () => {
             this.img.src = this.reader.result;
@@ -18,12 +19,13 @@ class Api {
         this.img.onload = () => {
             const imgWidth = this.img.width;
             const imgHeight = this.img.height;
-            if ( imgWidth != imgHeight ) {
-                const src = this.drawRect(imgWidth, imgHeight);
-                this.img.src = src;
-                return;
-            }
-            this.drawOver(imgWidth);
+            this.ratio = imgWidth / imgHeight;
+            // if ( imgWidth != imgHeight ) {
+            //     const src = this.drawRect(imgWidth, imgHeight);
+            //     this.img.src = src;
+            //     return;
+            // }
+            this.drawOver(this.ratio > 1 ? imgWidth : imgHeight);
         }
         this.drawOver = () => {}
     }
@@ -34,6 +36,7 @@ class Api {
             width = w;
             t = (w - h) / 2;
         } else {
+            this.max = 'height';
             width = h;
             l = (h - w) / 2;
         }
@@ -41,9 +44,22 @@ class Api {
         this.ctx.drawImage(this.img, l, t, w, h);
         return this.canvas.toDataURL('image/png');
     }
-    draw(w, type) {
-        this.canvas.width = this.canvas.height = w;
-        this.ctx.drawImage(this.img, 0, 0, w, w);
+    draw(w, type, ratio = 1) {
+        const h = w / ratio;
+        let iw = w,
+            ih = h,
+            x = 0,
+            y = 0;
+        if (this.ratio > ratio) {
+            ih = iw / this.ratio;
+            y = (h - ih) / 2
+        } else {
+            iw = ih * this.ratio;
+            y = (w - iw) / 2
+        }
+        this.canvas.width = w;
+        this.canvas.height = h;
+        this.ctx.drawImage(this.img,  x, y, iw, ih);
         return this.canvas.toDataURL(type);
     }
     render(file, callback){
@@ -56,6 +72,7 @@ class Api {
         this.drawOver = () => {}
         this.reader.abort();
         this.img.src = '';
+        this.ratio = 1;
         this.canvas.width = 1;
         this.canvas.height = 1;
         this.ctx.clearRect(0, 0, 1, 1);
@@ -97,15 +114,17 @@ document.onreadystatechange = () => {
         readToNext = (payload) => {
 
         };
-        drawTo = (size, type) => {
+        drawTo = (size, type, ratio = 1) => {
             size = size > 0 ? size : image_width;
             const mini_type = {
                 ico: 'image/vnd.microsoft.icon',
                 png: 'image/png',
                 jpg: 'image/jpeg'
             }[type] || 'image/png';
-            const base64 = api.draw(size, mini_type);
-            document.getElementById('result').insertAdjacentHTML('beforeend', `<a href="${base64}" download="${size}x.${type}" flex="dir:top cross:center"><img src="${base64}" alt="${size}x.${type}"/><span>${size}x.${type}</span></a>`);
+            const base64 = api.draw(size, mini_type, ratio);
+            const filename = `${size}x${ratio == 1 ? '' : Math.floor(size * ratio)}.${type}`;
+            const html = `<a href="${base64}" download="${filename}" flex="dir:top cross:center"><img src="${base64}" alt="${filename}"/><span>${filename}</span></a>`;
+            document.getElementById('result').insertAdjacentHTML('beforeend', html);
         }
         document.getElementById('file').onchange = (e) => {
             var list = document.getElementById('file').files;
